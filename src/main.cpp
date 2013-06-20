@@ -1,4 +1,8 @@
 #include <curses.h>
+#include <vector>
+
+#include "tile.h"
+#include "entity.h"
 
 char *map[]={
     "###############",
@@ -20,6 +24,16 @@ enum Keys
 
 int main(int argc, char* argv[])
 {
+    std::vector<Entity> entities;
+
+    Entity player;
+    player.x = 1;
+    player.y = 1;
+    player.character = '@';
+    player.hp = 10;
+
+    entities.push_back(player);
+    
     int keyDown = 0;
     int playerX = 1, playerY = 1;
 
@@ -47,8 +61,14 @@ int main(int argc, char* argv[])
         if (KEY_RIGHT == keyDown && map[playerY][playerX+1] == ' ')
                     playerX++;
 
-        // Place character
-        mvaddch(playerY, playerX, '@');
+        entities[0].x = playerX;
+        entities[0].y = playerY;
+
+        // Place entities
+        for (std::vector<Entity>::iterator entity = entities.begin(); entity != entities.end(); entity++)
+        {
+            mvaddch(entity->y, entity->x, entity->character);
+        }
     }
     return endwin();
 }
